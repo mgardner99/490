@@ -1,0 +1,25 @@
+--*Configuring your system to build the 490 Project*--
+--Joey Frohlinger
+
+To build the boost libraries, first download the current version from 
+http://www.boost.org/users/history/version_1_52_0.html
+
+get the windows .zip file.
+
+Next you want to extract that file to your C:/ in a logical place like C:/boost
+
+once done, go into the folder and open a command prompt there. (ctrl+shift+right click in the folder and click "open Command prompt here"
+
+then run "bootstrap.bat mingw" or "bootstrap.bat gcc" which will configure the build.
+then run "bjam toolset=gcc" 
+
+it will spit a lot of stuff out to the console and complete after a long time. A lot of stuff failed for me, so dont worry TOO much about it. the key is when it is finished it should have a lot of files in "<your boost dir>/stage/lib" these will be needed to compile properly. If nothing is in there, try the bootstrap step above with the other option.
+
+this will run for a while, but will pretty much do everything you need.
+
+After this, add the directory to your boost install (not your libs) to your path as normal.
+Within the .pro for the entire project, there are some variables you need to now edit, hopefully they are self explanitory which need to be changed (only the LIBS and the INCLUDEPATHS to be correct on your machine).
+
+At this point everything should build (you will get a bunch of warnings, but no errors, this should mean it runs).
+
+VICTORY!
