@@ -8,7 +8,8 @@
 
   */
 
-#include <QtGui/QApplication>
+//#include <QtGui/QApplication> //defunct
+#include <QtWidgets/QApplication> //newly moved library for 5.0 update
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])

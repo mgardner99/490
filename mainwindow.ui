@@ -378,7 +378,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Browse</string>
+     <string>Open Video</string>
     </property>
    </widget>
   </widget>

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui phonon
+QT       += core gui widgets multimedia multimediawidgets #Make sure all your major functionalities are here
 
 TARGET = 490UIAPP
 TEMPLATE = app
@@ -21,11 +21,9 @@ HEADERS  += mainwindow.h \
     heatmap.h \
     Communication.h
 
-INCLUDEPATH += "C:/boost_1_53_0"
+INCLUDEPATH += "C:/boost" #Change this to wherever your boost directory resides
 
-
-
-LIBS += "c:\boost_1_53_0\stage\lib\libboost_system-mgw46-mt-1_53.a"
+LIBS += "C:\boost\stage\lib\libboost_system-mgw46-mt-1_52.a" #Make sure this boost library matches above
 LIBS += "C:\MinGW\lib\libws2_32.a"
 
 FORMS    += mainwindow.ui

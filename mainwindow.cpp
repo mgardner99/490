@@ -1,9 +1,19 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "ui_mainwindow.h" // do NOT remove this, screws up everything.
 #include <QTime>
+#include <QtMultimedia>
+#include <QVideoSurfaceFormat>
+#include <QGraphicsVideoItem>
 
 using namespace std;
-/*
+/*2013/2014
+ *Megan Gardner
+ *for ELEC 490
+ *Group Members:    Kevin Cook
+ *                  Megan Gardner
+ *                  Cameron Kramer
+ *
+ *2012/2013
   Joey Frohlinger
   for ELEC 490
   Group Members:    Bren Piper
@@ -26,13 +36,26 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QGridLayout *grid = new QGridLayout(ui->vidWidget);
     grid->setSpacing(20);
-    vidPlayer = new Phonon::VideoPlayer(Phonon::VideoCategory, ui->vidWidget);
-    grid->addWidget(vidPlayer,1,0,3,1);
+    //vidPlayer = new VidPlayer(ui->vidWidget); //parent for video player is ui->vidWidget
+ //   vidPlayer = new Phonon::VideoPlayer(Phonon::VideoCategory, ui->vidWidget);
+   // grid->addWidget(vidPlayer,1,0,3,1);
     vidLoaded = false;
+    videoItem = new QGraphicsVideoItem();
+    videoItem->setSize(QSizeF(640,480));
+
+    QGraphicsScene *sceneVid = new QGraphicsScene(this);
+    QGraphicsView *graphicsview = new QGraphicsView(sceneVid);
+
+    sceneVid->addItem(videoItem);
+    grid->addWidget(graphicsview,1,0,3,1); //adds video scene widget to GUI - works
+
+    mediaPlayer.setVideoOutput(videoItem);
 
     QGridLayout *gridS = new QGridLayout(ui->seekWidget);
     gridS->setSpacing(20);
-    vidSeek = new Phonon::SeekSlider(vidPlayer->mediaObject(),ui->seekWidget);
+   // vidSeek = new Phonon::SeekSlider(vidPlayer->mediaObject(),ui->seekWidget);
+    vidSeek = new QSlider(Qt::Horizontal,ui->seekWidget);
+    vidSeek->setRange(0,0);
     gridS->addWidget(vidSeek,1,0,3,1);
     comm = 0;
     commThread = new QThread(this);
@@ -53,8 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer3, SIGNAL(timeout()), this, SLOT(vidTime()));
     timer3->start(10);
 
-
-    footMask.load("c:/leftFootMask.png");
+    footMask.load("c:/Users/Megan/Documents/GitHub/ELEC490/leftFootMask.png"); // location of foot mask
     scene = new QGraphicsScene(); //create empty scene
 
     //vec = comm->getData();
@@ -69,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->renderView->setSceneRect(pix.rect()); //set the renderviews view rectangle
     ui->renderView->setScene(scene); //set the renderViews scene
     commThread->start();
+
 }
 
 //update called from timer thread to lock frame rate
@@ -125,15 +148,17 @@ void MainWindow::changeCom(){
 
 void MainWindow::on_vidPlay_clicked()
 {
-    if(!vidLoaded){
-        vidPlayer->load(Phonon::MediaSource(vidPathText));
-        vidPlayer->play();
-        vidLoaded = true;
-    }
-    else
-        vidPlayer->play();
+   // if(!vidLoaded){
+        //vidPlayer->load(Phonon::MediaSource(vidPathText));
+     //   vidPlayer->play();
+       // vidLoaded = true;
+    //}
+    //else
+    //    vidPlayer->play();
+    mediaPlayer.play();
 }
 void MainWindow::vidTime(){
+    /*
     static qint64 time;
     static int h;
     static int s;
@@ -157,19 +182,20 @@ void MainWindow::vidTime(){
 
             vidPlayer->seek(h+m+s+ms);
         }
-    }
+    }*/
 }
 
 void MainWindow::on_vidPath_textEdited(const QString &arg1)
-{
+{/*
     vidPathText = arg1;
-    vidLoaded = false;
+    vidLoaded = false;*/
 }
 
 
 void MainWindow::on_vidPause_clicked()
 {
-    vidPlayer->pause();
+    //vidPlayer->pause();
+
 }
 
 void MainWindow::on_vidPath_returnPressed()
@@ -188,19 +214,19 @@ void MainWindow::on_vidEndLoopSet_clicked()
 }
 
 void MainWindow::leftArrowSlot(){
-    if(!vidPlayer->isPlaying())
-    vidPlayer->seek(vidPlayer->currentTime()-33);
+   // if(!vidPlayer->isPlaying())
+    //vidPlayer->seek(vidPlayer->currentTime()-33); // Why is 33?
 }
 
 void MainWindow::rightArrowSlot(){
-    if(!vidPlayer->isPlaying())
+    /*if(!vidPlayer->isPlaying())
         if(vidPlayer->currentTime() +33 < vidPlayer->totalTime())
-        vidPlayer->seek(vidPlayer->currentTime() + 33);
+        vidPlayer->seek(vidPlayer->currentTime() + 33);*/
 }
 
 void MainWindow::on_vidStop_clicked()
 {
-    vidPlayer->stop();
+    mediaPlayer.stop();
     vidLoaded = false;
 }
 
@@ -230,6 +256,7 @@ void MainWindow::on_fileBrowserButton_clicked()
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"));
     ui->vidPath->setText(fileName);
     vidPathText = fileName;
+    mediaPlayer.setMedia(QUrl::fromLocalFile(fileName)); // load media to mediaPlayer
 }
 
 void MainWindow::on_MainWindow_destroyed()
