@@ -1,4 +1,12 @@
 /*
+  2013-2014
+  Megan Gardner
+  for ELEC 490
+  Group Members: Kevin Cook
+                 Megan Gardner
+                 Cameron Kramer
+
+  2012-2013
   Joey Frohlinger
   for ELEC 490
   Group Members:    Bren Piper
@@ -45,12 +53,18 @@ public:
     ~MainWindow();
     Ui::MainWindow *ui;
     HeatMap m;
+    HeatMap m2;
     vector<DataPoint>* vec;
+    vector<DataPoint>* vec2;
     QPixmap pix;
-    QGraphicsScene *scene;
+    QPixmap pix2;
+    QGraphicsScene *Lscene;
+    QGraphicsScene *Rscene;
     QGraphicsItem* pixItem;
+    QGraphicsItem* pixItem2;
     float fudger; // what is this "fudger" for?
-    QImage footMask;
+    QImage LFootMask;
+    QImage RFootMask;
     QThread* commThread;
     Communication* comm;
     //Phonon::VideoPlayer *vidPlayer; - defunct
@@ -59,6 +73,7 @@ public:
     QString vidPathText;
     QMediaPlayer mediaPlayer;
     QSlider *vidSeek;
+    QSlider *rotate;
     QShortcut *leftArrow;
     QShortcut *rightArrow;
 
@@ -91,6 +106,7 @@ public:
     void changeCom();
     void on_fileBrowserButton_clicked();
     void on_MainWindow_destroyed();
+    void rotateVideo(int angle); // rotate video
 };
 
 #endif // MAINWINDOW_H

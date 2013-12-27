@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h" // do NOT remove this, screws up everything.
+#include "ui_mainwindow.h" // do NOT remove this, screws up everything for ui
 #include <QTime>
 #include <QtMultimedia>
 #include <QVideoSurfaceFormat>
@@ -26,7 +26,8 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m(QSize(400,400),QImage::Format_RGB32)//constructor for heatmap
+    m(QSize(400,400),QImage::Format_RGB32),//constructor for left heatmap
+    m2(QSize(400,400),QImage::Format_RGB32) // constructor for right heat map
 
 {
     ui->setupUi(this);
@@ -57,6 +58,14 @@ MainWindow::MainWindow(QWidget *parent) :
     vidSeek = new QSlider(Qt::Horizontal,ui->seekWidget);
     vidSeek->setRange(0,0);
     gridS->addWidget(vidSeek,1,0,3,1);
+
+
+    rotate = new QSlider(Qt::Vertical,ui->rotateWidget);
+    rotate->setRange(-180,180);
+    rotate->setValue(0);
+    connect(rotate,SIGNAL(valueChanged(int)),this,SLOT(rotateVideo(int)));
+    gridS->addWidget(rotate,0,20,0,1);
+
     comm = 0;
     commThread = new QThread(this);
     uiInit();//this function is to initialize the data in the UI (boxes etc)
@@ -76,20 +85,36 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer3, SIGNAL(timeout()), this, SLOT(vidTime()));
     timer3->start(10);
 
-    footMask.load("c:/Users/Megan/Documents/GitHub/ELEC490/leftFootMask.png"); // location of foot mask
-    scene = new QGraphicsScene(); //create empty scene
+    LFootMask.load("c:/Users/Megan/Documents/GitHub/490/leftFootMask.png"); // location of foot mask
+    RFootMask.load("c:/Users/Megan/Documents/GitHub/490/rightFootMask.png");
+    Lscene = new QGraphicsScene(); //create empty scene
+    Rscene = new QGraphicsScene();
 
     //vec = comm->getData();
     vec = new vector<DataPoint>;
+    vec2 = new vector<DataPoint>;
     //cout<<"before"<<endl;
-    m.genMap(*vec);
+    m.genMap(*vec); // left foot heat map
+    m2.genMap(*vec2); // right foot heat map
    // cout<<"after"<<endl;
-    scene->setSceneRect(m.rect()); //set the scene's view rectangle to the image's
+
+
+    Lscene->setSceneRect(m.rect()); //set the scene's view rectangle to the image's
     pix = QPixmap::fromImage(m); //create a pixmap from the image
-    pix = pix.scaled(ui->renderView->size());
-    pixItem =  scene->addPixmap(pix); //add the pixmap to the scene
-    ui->renderView->setSceneRect(pix.rect()); //set the renderviews view rectangle
-    ui->renderView->setScene(scene); //set the renderViews scene
+    pix = pix.scaled(ui->renderView2->size());
+    pixItem = Lscene->addPixmap(pix); //add the pixmap to the scene
+    ui->renderView2->setSceneRect(pix.rect()); //set the renderviews view rectangle
+    ui->renderView2->setScene(Lscene); //set the renderViews scene
+
+    // This section of code cauess the UI to unexpectedly shutdown
+
+    Rscene->setSceneRect(m2.rect());
+    pix2 = QPixmap::fromImage(m2);
+    pix2 = pix2.scaled(ui->renderView->size());
+    pixItem2 = Rscene->addPixmap(pix2);
+    ui->renderView->setSceneRect(pix2.rect());
+    ui->renderView->setScene(Rscene);
+
     commThread->start();
 
 }
@@ -98,11 +123,19 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::update(){
 
     m.genMap(*vec);
-    m.applyMask(footMask);
-    scene->removeItem(pixItem);
+    m.applyMask(LFootMask);
+    Lscene->removeItem(pixItem);
     delete pixItem; //memory leak fix (What what!)
     pix = QPixmap::fromImage(m);
-    pixItem = scene->addPixmap(pix);
+    pixItem = Lscene->addPixmap(pix);
+/*
+    m2.genMap(*vec2);
+    m2.applyMask(RFootMask);
+    Rscene->removeItem(pixItem2);
+    delete pixItem2;
+    pix2 = QPixmap::fromImage(m2);
+    pixItem2 = Rscene->addPixmap(pix2);
+    */
 }
 
 
@@ -194,7 +227,7 @@ void MainWindow::on_vidPath_textEdited(const QString &arg1)
 
 void MainWindow::on_vidPause_clicked()
 {
-    //vidPlayer->pause();
+    mediaPlayer.pause();
 
 }
 
@@ -262,4 +295,12 @@ void MainWindow::on_fileBrowserButton_clicked()
 void MainWindow::on_MainWindow_destroyed()
 {
     cout<<"Exit"<<endl;
+}
+
+void MainWindow::rotateVideo(int angle) // rotate video
+{
+    qreal x = videoItem->boundingRect().width()/2.0;
+    qreal y = videoItem->boundingRect().height()/2.0;
+    videoItem->setTransform(QTransform().translate(x,y).rotate(angle).translate(-x,-y));
+
 }
