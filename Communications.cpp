@@ -38,6 +38,7 @@ Communication::~Communication(){
     delete data;
 }
 
+//you will need to change
 Communication::Communication(string comPort): q(),file("C:\\Users\\Joey\\Documents\\logOutput.log",ios::out){
     mutex = false;
     file<<"begin"<<endl;

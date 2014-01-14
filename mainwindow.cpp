@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QGridLayout *gridS = new QGridLayout(ui->seekWidget);
     gridS->setSpacing(20);
-   // vidSeek = new Phonon::SeekSlider(vidPlayer->mediaObject(),ui->seekWidget);
+   // vidSeek = new Phonon::SeekSlider(vidPlayer->mediaObject(),ui->seekWidget); -- obsolete
     vidSeek = new QSlider(Qt::Horizontal,ui->seekWidget);
     vidSeek->setRange(0,0);
     gridS->addWidget(vidSeek,1,0,3,1);
@@ -128,14 +128,14 @@ void MainWindow::update(){
     delete pixItem; //memory leak fix (What what!)
     pix = QPixmap::fromImage(m);
     pixItem = Lscene->addPixmap(pix);
-/*
+
     m2.genMap(*vec2);
     m2.applyMask(RFootMask);
     Rscene->removeItem(pixItem2);
     delete pixItem2;
     pix2 = QPixmap::fromImage(m2);
     pixItem2 = Rscene->addPixmap(pix2);
-    */
+
 }
 
 
@@ -151,11 +151,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_comPortBox_currentIndexChanged(const QString &arg1)
 {
-
     currentComPort = arg1;
     changeCom();
-
-
 }
 void MainWindow::commTimer(){
     if(!commThread->isRunning())
@@ -191,14 +188,13 @@ void MainWindow::on_vidPlay_clicked()
     mediaPlayer.play();
 }
 void MainWindow::vidTime(){
-    /*
     static qint64 time;
     static int h;
     static int s;
     static int m;
     static int ms;
 
-    time = vidPlayer->currentTime(); //elapsed time in milliseconds
+    time = mediaPlayer.duration(); //elapsed time in milliseconds - updated to reflect QMediaPlayer functions
     ms = time%1000;
     s = (time/1000) % 60;
     m = (time/60000)%60;
@@ -213,15 +209,15 @@ void MainWindow::vidTime(){
             m = ui->vidStartLoop->time().minute()*60000;
             h = ui->vidStartLoop->time().hour()*360000;
 
-            vidPlayer->seek(h+m+s+ms);
+            mediaPlayer.setPosition(h+m+s+ms); // updated to reflect QMediaPlayer functions
         }
-    }*/
+    }
 }
 
 void MainWindow::on_vidPath_textEdited(const QString &arg1)
-{/*
+{
     vidPathText = arg1;
-    vidLoaded = false;*/
+    //vidLoaded = false;
 }
 
 
@@ -247,14 +243,15 @@ void MainWindow::on_vidEndLoopSet_clicked()
 }
 
 void MainWindow::leftArrowSlot(){
-   // if(!vidPlayer->isPlaying())
-    //vidPlayer->seek(vidPlayer->currentTime()-33); // Why is 33?
+    if(mediaPlayer.duration()-33 > 0)    //check if we can skip back 33 ms
+        mediaPlayer.setPosition(mediaPlayer.duration()-33);
+    else
+        mediaPlayer.setPosition(0);
 }
 
 void MainWindow::rightArrowSlot(){
-    /*if(!vidPlayer->isPlaying())
-        if(vidPlayer->currentTime() +33 < vidPlayer->totalTime())
-        vidPlayer->seek(vidPlayer->currentTime() + 33);*/
+    //if(mediaPlayer.duration()+33 < vidPlayer.totalTime())
+        mediaPlayer.setPosition(mediaPlayer.duration() + 33);
 }
 
 void MainWindow::on_vidStop_clicked()
@@ -264,7 +261,7 @@ void MainWindow::on_vidStop_clicked()
 }
 
 void MainWindow::on_comPortBox_activated(const QString &arg1)
-{/*
+{
      //cout<<"Called"<<arg1.toStdString()<<endl;
     if(comm != 0){
         cout<<"com open already - killing"<<endl;
@@ -274,14 +271,14 @@ void MainWindow::on_comPortBox_activated(const QString &arg1)
     }
     else{
     }
-    for(int i = 0; i < 1; i ++){
+    for(int i=0; i<1; i++){
     comm = new Communication(arg1.toStdString());
     comm->moveToThread(commThread);
     connect(commThread, SIGNAL(started()), comm, SLOT(update()));
     commThread->start();
     vec = comm->getData(); //pass data pointer
     }
-    cout<<"opened " << arg1.toStdString()<<endl;*/
+    cout<<"opened " << arg1.toStdString()<<endl;
 }
 
 void MainWindow::on_fileBrowserButton_clicked()

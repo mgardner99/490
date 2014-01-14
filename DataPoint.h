@@ -15,9 +15,9 @@
 #include <QtCore/qmath.h>
 class DataPoint{
 public:
-    DataPoint();
-    DataPoint(QPoint l, qint16 v);
-    DataPoint(int x, int y, qint16 v);
+    DataPoint(); //default constructor
+    DataPoint(QPoint l, qint16 v); //constructor with QPoint location and value
+    DataPoint(int x, int y, qint16 v); //constructor with x-y location and value
 
     qint16 getVal();
     QPoint getLocation();

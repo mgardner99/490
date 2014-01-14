@@ -18,7 +18,7 @@ class Communication: public QObject{
     Q_OBJECT
 public:
     Communication(string comPort);
-    ~Communication();
+    ~Communication(); //destructor
 
     vector<DataPoint>* getData();
     static QStringList getPortsList();
