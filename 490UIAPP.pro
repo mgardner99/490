@@ -21,9 +21,9 @@ HEADERS  += mainwindow.h \
     heatmap.h \
     Communication.h
 
-INCLUDEPATH += "C:/boost" #Change this to wherever your boost directory resides
+INCLUDEPATH += "C:/boost_1_52_0" #Change this to wherever your boost directory resides
 
-LIBS += "C:\boost\stage\lib\libboost_system-mgw46-mt-1_52.a" #Make sure this boost library matches above
+LIBS += "C:\boost_1_52_0\stage\lib\libboost_system-mgw48-mt-1_52.a" #Make sure this boost library matches above
 LIBS += "C:\MinGW\lib\libws2_32.a"
 
 FORMS    += mainwindow.ui
