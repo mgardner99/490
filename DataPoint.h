@@ -13,6 +13,7 @@
 
 #include <QPoint>
 #include <QtCore/qmath.h>
+
 class DataPoint{
 public:
     DataPoint(); //default constructor

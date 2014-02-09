@@ -28,7 +28,6 @@
 #include <QTimer>
 #include "DataPoint.h"
 #include "Communication.h"
-//#include <phonon/phonon> //defunct
 #include <QThread>
 #include <QShortcut>
 #include <QFileDialog>
@@ -52,8 +51,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     Ui::MainWindow *ui;
-    HeatMap m;
-    HeatMap m2;
+    HeatMap m; //left foot
+    HeatMap m2; // right foot
     vector<DataPoint>* vec;
     vector<DataPoint>* vec2;
     QPixmap pix;
@@ -67,20 +66,16 @@ public:
     QImage RFootMask;
     QThread* commThread;
     Communication* comm;
-    //Phonon::VideoPlayer *vidPlayer; - defunct
-    //Phonon::SeekSlider *vidSeek; - defunct
-    bool vidLoaded;
     QString vidPathText;
     QMediaPlayer mediaPlayer;
     QSlider *vidSeek;
     QSlider *rotate;
     QShortcut *leftArrow;
     QShortcut *rightArrow;
-
     QString currentComPort;
-
-    QGraphicsVideoItem *videoItem;
-
+    QGraphicsVideoItem *videoItem; // for playing video
+    QString kneeAngle1; //output knee angle - needs to be QString to show up on UI
+    QString kneeAngle2;
 
     void uiInit();
 

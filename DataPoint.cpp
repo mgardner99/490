@@ -18,6 +18,7 @@ DataPoint::DataPoint(){
 DataPoint::DataPoint(int x, int y, qint16 v){
     DataPoint(QPoint(x,y),v);
 }
+
 DataPoint::DataPoint(QPoint l, qint16 v){
     setLocation(l);
     setVal(v);

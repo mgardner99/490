@@ -1,0 +1,4 @@
+490 Notes
+
+- Start recording and Check Connection buttons are fake
+- fix crash if there are no connected com ports

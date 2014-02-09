@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <vector>
+
 #include <boost/asio.hpp>
+
 #include "DataPoint.h"
 #include <queue>
 #include <sstream>
@@ -22,19 +24,26 @@ public:
 
     vector<DataPoint>* getData();
     static QStringList getPortsList();
+    QString getAngleData1();
+    QString getAngleData2();
 
 private:
     serial_port* port;
     io_service* io;
     char msg[512];
     vector<DataPoint>* data;
+    QString angleData1;
+    QString angleData2;
     queue<char> q;
-   // int valNum;
     fstream file;
+    bool startFile;
     void readData();
     void dataSet(int sense);
     bool mutex;
     void findFront();
+    void getAngle1();
+    void getAngle2();
+
 
 public slots:
     void update();

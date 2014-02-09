@@ -219,11 +219,6 @@ void MainWindow::vidTime(){
     QTime qtime(h,m,s,ms);
     ui->timeEdit->setTime(qtime);
     if(ui->loopBox->isChecked()){
-        if(!ui->vidStartLoop->isEnabled()) //only enable on first time
-        {
-            ui->vidStartLoop->setEnabled(1);
-            ui->vidEndLoop->setEnabled(1);
-        }
         if(qtime > ui->vidEndLoop->time()){
             ms = ui->vidStartLoop->time().msec();
             s = ui->vidStartLoop->time().second()*1000;

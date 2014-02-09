@@ -29,7 +29,7 @@ int val5;
 void outData(int sensor, int data);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(57600);
 }
 
 void loop() {
@@ -49,7 +49,7 @@ void loop() {
   outData('e',val4);
   outData('f',val5);
   
-  delay(1000/60); //this can be changed later
+  delay(1000/10); //this can be changed later - 10 fps
   
   
 }
