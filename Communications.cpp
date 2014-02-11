@@ -79,9 +79,9 @@ void Communication::update(){
             break;
         case 'f': dataSet(5);
             break;
-        case 'w': getAngle2();
+        case 'w': getAngle(2,0);
             break;
-        case 'y': getAngle1(); // uses different function since we just need the float (not converted to a vector)
+        case 'y': getAngle1(1,0); // uses different function since we just need the float (not converted to a vector)
             break;
         default:
             q.pop();
@@ -196,7 +196,8 @@ void Communication::findFront(){
 }
 
 //written to get yaw data
-void Communication::getAngle1(){
+void Communication::getAngle(int sensor, int dir){
+    // dir: 0=x, 1=y, 2=z
     cout << "in getAngle" << endl;
     stringstream ss;
     if(q.size() != 0)
@@ -207,6 +208,7 @@ void Communication::getAngle1(){
             return;
         cout<<"getting q head"<<endl;
         ss<<q.front();
+        num[i] = q.front();
         cout<<"got q head"<<endl;
         if(q.size()!=0)
         q.pop();
@@ -220,45 +222,37 @@ void Communication::getAngle1(){
     if(q.size()!=0)
         q.pop();
 
-    angleData1 = QString::fromStdString(ss.str());
-    cout<<"out angleOut"<<endl;
-}
-
-QString Communication::getAngleData1()
-{
-    return angleData1;
-}
-
-
-void Communication::getAngle2(){
-    cout << "in getAngle" << endl;
-    stringstream ss;
-    if(q.size() != 0)
-    q.pop();
-    cout<<"before while"<<endl;
-    while(q.front() != 'z'){ // 'z' is the end packet footer
-        if(q.size() == 0)
-            return;
-        cout<<"getting q head"<<endl;
-        ss<<q.front();
-        cout<<"got q head"<<endl;
-        if(q.size()!=0)
-        q.pop();
-        cout<<q.size()<<endl;
-        if(q.size() == 0)
-            return;
+    // stringstream to float conversion - convoluded but actually easiest to go ss->QStr->float
+    float in = 0.0;
+    QString QStr = QString::fromStdString(ss.str());
+    in = QStr.toFloat();
+    if(sensor==1)
+    {
+        if(dir==0)
+            k1.setX(in);
+        else if(dir==1)
+            k1.setY(in);
+        else
+            k1.setZ(in);
     }
-    cout<<ss.str().c_str()<<endl;
-    cout<<"after while"<<endl;
-
-    if(q.size()!=0)
-        q.pop();
-
-    angleData2 = QString::fromStdString(ss.str());
+    else if(sensor==2)
+    {
+        if(dir==0)
+            k2.setX(in);
+        else if(dir==1)
+            k2.setY(in);
+        else
+            k2.setZ(in);
+    }
     cout<<"out angleOut"<<endl;
 }
 
-QString Communication::getAngleData2()
+KneeVec Communication::getAngleData1()
 {
-    return angleData2;
+    return k1;
+}
+
+KneeVec Communication::getAngleData2()
+{
+    return k2;
 }

@@ -34,6 +34,7 @@
 #include <QMultimedia>
 #include <QtWidgets>
 #include <QtMultimediaWidgets>
+#include "KneeVec.h"
 
 
 namespace Ui {
@@ -76,6 +77,8 @@ public:
     QGraphicsVideoItem *videoItem; // for playing video
     QString kneeAngle1; //output knee angle - needs to be QString to show up on UI
     QString kneeAngle2;
+    KneeVec k1;
+    KneeVec k2;
 
     void uiInit();
 

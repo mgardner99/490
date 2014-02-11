@@ -14,12 +14,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     DataPoint.cpp \
     heatmap.cpp \
-    Communications.cpp
+    Communications.cpp \
+    KneeVec.cpp
 
 HEADERS  += mainwindow.h \
     DataPoint.h \
     heatmap.h \
-    Communication.h
+    Communication.h \
+    KneeVec.h
 
 INCLUDEPATH += "C:\boost_1_52_0" #Change this to wherever your boost directory resides
 

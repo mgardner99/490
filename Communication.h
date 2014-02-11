@@ -12,6 +12,7 @@
 #include <QStringList>
 #include <fstream>
 #include <time.h>
+#include "KneeVec.h"
 
 using namespace std;
 using namespace boost::asio;
@@ -24,8 +25,8 @@ public:
 
     vector<DataPoint>* getData();
     static QStringList getPortsList();
-    QString getAngleData1();
-    QString getAngleData2();
+    KneeVec getAngleData1();
+    KneeVec getAngleData2();
 
 private:
     serial_port* port;
@@ -41,8 +42,9 @@ private:
     void dataSet(int sense);
     bool mutex;
     void findFront();
-    void getAngle1();
-    void getAngle2();
+    void getAngle(int sensor, int dir);
+    KneeVec k1;
+    KneeVec k2;
 
 
 public slots:

@@ -4,6 +4,7 @@
 #include <QtMultimedia> //videoplayer lib
 #include <QVideoSurfaceFormat>
 #include <QGraphicsVideoItem>
+#include <QVideoWidget>
 
 using namespace std;
 /*2013/2014
@@ -43,6 +44,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QGraphicsScene *sceneVid = new QGraphicsScene(this);
     QGraphicsView *graphicsview = new QGraphicsView(sceneVid);
 
+//    QVideoWidget *videoWidget = new QVideoWidget(this);
+
+//    grid->addWidget(videoWidget,1,0,3,1);
+//    videoWidget->show();
+ //   mediaPlayer.setVideoOutput(videoWidget);
     sceneVid->addItem(videoItem);
     grid->addWidget(graphicsview,1,0,3,1); //adds video scene widget to GUI
 
@@ -136,12 +142,10 @@ void MainWindow::update(){
         vec = comm->getData();*/
    // }
 
-    float knee1x = kneeAngle1.toFloat();
-    float knee2x = kneeAngle2.toFloat();
+    float knee = k1.KneeAngle(k2); //always call in this fashion - otherwise calculation will be wrong
 
-    float add = knee1x + knee2x;
-    QString text = 0;
-    text.setNum(add);
+    QString text = 0; //used to initialize - DO NOT CHANGE
+    text.setNum(knee);
     // update angle
     ui->angleOut->setPlainText(text);
 
@@ -163,7 +167,8 @@ void MainWindow::update(){
 }
 
 
-void MainWindow::uiInit(){
+void MainWindow::uiInit()
+{
     ui->comPortBox->addItems(Communication::getPortsList());
 }
 
@@ -204,6 +209,7 @@ void MainWindow::on_vidPlay_clicked()
 {
     mediaPlayer.play();
 }
+
 void MainWindow::vidTime(){
     static qint64 time;
     static int h;
@@ -219,11 +225,6 @@ void MainWindow::vidTime(){
     QTime qtime(h,m,s,ms);
     ui->timeEdit->setTime(qtime);
     if(ui->loopBox->isChecked()){
-        if(!ui->vidStartLoop->isEnabled()) //only enable on first time
-        {
-            ui->vidStartLoop->setEnabled(1);
-            ui->vidEndLoop->setEnabled(1);
-        }
         if(qtime > ui->vidEndLoop->time()){
             ms = ui->vidStartLoop->time().msec();
             s = ui->vidStartLoop->time().second()*1000;
