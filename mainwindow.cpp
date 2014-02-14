@@ -28,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m(QSize(400,400),QImage::Format_RGB32),//constructor for left heatmap
-    m2(QSize(400,400),QImage::Format_RGB32) // constructor for right heat map
-
+    m2(QSize(400,400),QImage::Format_RGB32), // constructor for right heat map
+    file("C:\\Users\\Megan Gardner\\GitHub\\490\\angleLog.log",ios::out)
 {
     ui->setupUi(this);
 
@@ -59,7 +59,6 @@ MainWindow::MainWindow(QWidget *parent) :
     vidSeek = new QSlider(Qt::Horizontal,ui->seekWidget); //video seek slider
     vidSeek->setRange(0,0);
     gridS->addWidget(vidSeek,1,0,3,1);
-
 
     rotate = new QSlider(Qt::Vertical,ui->rotateWidget);
     rotate->setRange(-180,180);
@@ -99,8 +98,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     else
     {*/
-        vec = new vector<DataPoint>;
-        //vec = comm->getData();
+        //vec = new vector<DataPoint>;
+        vec = comm->getData();
         vec2 = new vector<DataPoint>;
    // }
 
@@ -114,8 +113,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->renderView2->setSceneRect(pix.rect()); //set the renderviews view rectangle
     ui->renderView2->setScene(Lscene); //set the renderViews scene
 
-    // This section of code cauess the UI to unexpectedly shutdown
-
     Rscene->setSceneRect(m2.rect());
     pix2 = QPixmap::fromImage(m2);
     pix2 = pix2.scaled(ui->renderView->size());
@@ -127,25 +124,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->angleOut->setPlainText(kneeAngle1);
 
     commThread->start();
-
+    file << "begin" << endl;
 }
 
 //update called from timer thread to lock frame rate
 void MainWindow::update(){
     cout << "in update" << endl;
 
-    // check if comms are enabled - if not, then calling the update will cause crash
-  //  if(comm->isEnabled()){
-  /*      comm->update(); //get new data
-        kneeAngle1 = comm->getAngleData1();
-        kneeAngle2 = comm->getAngleData2();
-        vec = comm->getData();*/
-   // }
-
-    float knee = k1.KneeAngle(k2); //always call in this fashion - otherwise calculation will be wrong
-
+    comm->update();
+    vec = comm->getData();
+    k1 = comm->getAngleData1();
+    k2 = comm->getAngleData2();
+    float knee = k2.KneeAngle(k1); //always call in this fashion - otherwise calculation will be wrong
+    file<< knee<<endl;
     QString text = 0; //used to initialize - DO NOT CHANGE
     text.setNum(knee);
+
     // update angle
     ui->angleOut->setPlainText(text);
 

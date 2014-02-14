@@ -2,3 +2,6 @@
 
 - Start recording and Check Connection buttons are fake
 - fix crash if there are no connected com ports
+- can add body angle with no extra hardware (write in report)
+- need to speed up video (slowed down for some reason)
+- could probably also add ankle angle with no extra hardware - software end

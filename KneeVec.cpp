@@ -46,31 +46,36 @@ float KneeVec::KneeAngle(KneeVec other)
 {
     //perform knee angle algorithm - other should be sensor 2
     float offset = 0.0;
+    cout << y << endl;
+    cout << z << endl;
+    cout << other.y << endl;
+    cout << other.z << endl;
 
-    if(other.x < 0.0 && other.z > 0.0)
+    if(other.y < 0.0 && other.z > 0.0)
     {
-        offset = 180 + 2*abs(atan(other.x/other.z));
+        offset = 180 + 2*abs(atan(other.y/other.z)*180/M_PI);
     }
-    else if(other.x < 0.0 && other.z < 0.0)
+    else if(other.y < 0.0 && other.z < 0.0)
     {
-        offset = 180 - (180 - 2*atan(other.x/other.y));
+        offset = 180 - (180 - 2*atan(other.y/other.z)*180/M_PI);
     }
-
-    float output = offset - abs(atan(x/z)) - abs(atan(other.x/other.z));
-
-    if(x < 0.0 && z > 0.0 && other.x < 0.0 && other.z > 0.0)
+    cout << offset << endl;
+    float output = offset - abs(atan(y/z)*180/M_PI) - abs(atan(other.y/other.z)*180/M_PI);
+    cout << output << endl;
+    if(y < 0.0 && z > 0.0 && other.y < 0.0 && other.z > 0.0)
     {
-        return output;
+        return output-4;
     }
-    else if(x < 0.0 && z < 0.0 && other.x < 0.0 && other.z > 0.0)
+    else if(y < 0.0 && z < 0.0 && other.y < 0.0 && other.z > 0.0)
     {
-        return 180-output;
+        //return 180-output;
+        return offset-output-4;
     }
-    else if(x < 0.0 && z > 0.0 && other.x < 0.0 && other.z > 0.0)
+    else if(y < 0.0 && z > 0.0 && other.y < 0.0 && other.z > 0.0)
     {
-        return output;
+        return output-4;
     }
-    else if(x < 0.0 && z > 0.0 && other.x > 0.0 && other.z < 0.0)
+    else if(y < 0.0 && z > 0.0 && other.y > 0.0 && other.z < 0.0)
     {
         return 180-output;
     }

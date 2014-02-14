@@ -7,7 +7,10 @@
 #ifndef KNEEVEC_H
 #define KNEEVEC_H
 
-#include <QtCore/qmath.h>
+#include <cmath>
+#include <iostream>
+
+using namespace std;
 
 class KneeVec {
     public:

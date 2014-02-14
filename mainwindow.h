@@ -35,7 +35,7 @@
 #include <QtWidgets>
 #include <QtMultimediaWidgets>
 #include "KneeVec.h"
-
+#include <fstream>
 
 namespace Ui {
 class MainWindow;
@@ -79,7 +79,7 @@ public:
     QString kneeAngle2;
     KneeVec k1;
     KneeVec k2;
-
+    fstream file;
     void uiInit();
 
  private slots:

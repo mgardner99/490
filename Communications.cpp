@@ -37,7 +37,6 @@ Communication::~Communication(){
 Communication::Communication(string comPort): q(),file("C:\\Users\\Megan Gardner\\GitHub\\490\\logOutput.log",ios::out){
     mutex = false;
     file<<"begin"<<endl;
-    //file("c:/logOutput.log");
     io = new io_service();
     port = new serial_port(*io,comPort);
     //port->set_option(serial_port_base::baud_rate(9600));
@@ -79,9 +78,17 @@ void Communication::update(){
             break;
         case 'f': dataSet(5);
             break;
-        case 'w': getAngle(2,0);
+        case 'g': getAngle(1,1);
             break;
-        case 'y': getAngle1(1,0); // uses different function since we just need the float (not converted to a vector)
+        case 'h': getAngle(1,2);
+            break;
+        case 'i': getAngle(1,3);
+            break;
+        case 'j': getAngle(2,1);
+            break;
+        case 'k': getAngle(2,2);
+            break;
+        case 'l': getAngle(2,3);
             break;
         default:
             q.pop();
@@ -187,7 +194,7 @@ vector<DataPoint>* Communication::getData(){
 
 void Communication::findFront(){
     if(q.size() > 0){
-        if((q.front() != 'a') && (q.front() != 'b') && (q.front() != 'c') && (q.front() != 'd') && (q.front() != 'e') && (q.front() != 'f') && (q.front() != 'y')){
+        if((q.front() != 'a') && (q.front() != 'b') && (q.front() != 'c') && (q.front() != 'd') && (q.front() != 'e') && (q.front() != 'f') && (q.front() != 'g')  && (q.front() != 'h') && (q.front() != 'i') && (q.front() != 'j') && (q.front() != 'k') && (q.front() != 'l')){
             q.pop();
             findFront();
         }
@@ -206,17 +213,13 @@ void Communication::getAngle(int sensor, int dir){
     while(q.front() != 'z'){ // 'z' is the end packet footer
         if(q.size() == 0)
             return;
-        cout<<"getting q head"<<endl;
         ss<<q.front();
-        num[i] = q.front();
-        cout<<"got q head"<<endl;
         if(q.size()!=0)
         q.pop();
         cout<<q.size()<<endl;
         if(q.size() == 0)
             return;
     }
-    cout<<ss.str().c_str()<<endl;
     cout<<"after while"<<endl;
 
     if(q.size()!=0)
@@ -228,18 +231,30 @@ void Communication::getAngle(int sensor, int dir){
     in = QStr.toFloat();
     if(sensor==1)
     {
-        if(dir==0)
+        cout << "dir:" <<endl;
+        cout << dir << endl;
+        if(dir==1)
+        {
             k1.setX(in);
-        else if(dir==1)
+            cout << "set x" << endl;
+            cout << k1.getX() << endl;
+        }
+        else if(dir==2)
+        {
+            cout<<"set y"<<endl;
             k1.setY(in);
+        }
         else
+        {
+            cout<<"set z"<<endl;
             k1.setZ(in);
+        }
     }
     else if(sensor==2)
     {
-        if(dir==0)
+        if(dir==1)
             k2.setX(in);
-        else if(dir==1)
+        else if(dir==2)
             k2.setY(in);
         else
             k2.setZ(in);
