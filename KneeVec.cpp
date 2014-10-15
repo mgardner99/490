@@ -64,16 +64,16 @@ float KneeVec::KneeAngle(KneeVec other)
     cout << output << endl;
     if(y < 0.0 && z > 0.0 && other.y < 0.0 && other.z > 0.0)
     {
-        return output-4;
+        return output;
     }
     else if(y < 0.0 && z < 0.0 && other.y < 0.0 && other.z > 0.0)
     {
         //return 180-output;
-        return offset-output-4;
+        return offset-output;
     }
     else if(y < 0.0 && z > 0.0 && other.y < 0.0 && other.z > 0.0)
     {
-        return output-4;
+        return output;
     }
     else if(y < 0.0 && z > 0.0 && other.y > 0.0 && other.z < 0.0)
     {

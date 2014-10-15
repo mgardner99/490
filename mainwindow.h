@@ -79,7 +79,7 @@ public:
     QString kneeAngle2;
     KneeVec k1;
     KneeVec k2;
-    fstream file;
+    fstream angleFile;
     void uiInit();
 
  private slots:

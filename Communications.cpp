@@ -34,7 +34,8 @@ Communication::~Communication(){
 }
 
 //you will need to change
-Communication::Communication(string comPort): q(),file("C:\\Users\\Megan Gardner\\GitHub\\490\\logOutput.log",ios::out){
+Communication::Communication(string comPort): q(),file("C:\\Users\\Megan Gardner\\GitHub\\490\\logOutput.log",ios::out)
+{
     mutex = false;
     file<<"begin"<<endl;
     io = new io_service();

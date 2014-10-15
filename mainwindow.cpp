@@ -28,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m(QSize(400,400),QImage::Format_RGB32),//constructor for left heatmap
-    m2(QSize(400,400),QImage::Format_RGB32), // constructor for right heat map
-    file("C:\\Users\\Megan Gardner\\GitHub\\490\\angleLog.log",ios::out)
+    m2(QSize(400,400),QImage::Format_RGB32) // constructor for right heat map
+  //  angleFile("C:\\Users\\Megan Gardner\\GitHub\\490\\angleLog.log",ios::out)
 {
     ui->setupUi(this);
 
@@ -98,8 +98,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     else
     {*/
-        //vec = new vector<DataPoint>;
-        vec = comm->getData();
+        vec = new vector<DataPoint>;
+      //  vec = comm->getData();
         vec2 = new vector<DataPoint>;
    // }
 
@@ -120,25 +120,25 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->renderView->setSceneRect(pix2.rect());
     ui->renderView->setScene(Rscene);
 
-    kneeAngle1.setNum(0);
-    ui->angleOut->setPlainText(kneeAngle1);
+    //kneeAngle1.setNum(0);
+    ui->angleOut->setPlainText(0);
 
     commThread->start();
-    file << "begin" << endl;
+    angleFile << "begin" << endl;
 }
 
 //update called from timer thread to lock frame rate
 void MainWindow::update(){
     cout << "in update" << endl;
 
-    comm->update();
-    vec = comm->getData();
-    k1 = comm->getAngleData1();
-    k2 = comm->getAngleData2();
+   // comm->update();
+    //vec = comm->getData();
+    //k1 = comm->getAngleData1();
+    //k2 = comm->getAngleData2();
     float knee = k2.KneeAngle(k1); //always call in this fashion - otherwise calculation will be wrong
-    file<< knee<<endl;
+    angleFile<<knee<<endl;
     QString text = 0; //used to initialize - DO NOT CHANGE
-    text.setNum(knee);
+    text.setNum(45);
 
     // update angle
     ui->angleOut->setPlainText(text);
@@ -196,7 +196,6 @@ void MainWindow::changeCom(){
     commThread->start();
     vec = comm->getData(); //pass data pointer
 }
-
 
 
 void MainWindow::on_vidPlay_clicked()
